@@ -12,12 +12,12 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  bool isLiked = false; // State to track like status
-  double rating = 4.0; // Example rating value
+  bool isLiked = false;
+  double rating = 4.0;
 
   @override
   Widget build(BuildContext context) {
-    final double discount = 0.2; // Example discount rate (20%)
+    final double discount = 0.2;
     final double discountedPrice = widget.product.price * (1 - discount);
 
     return GestureDetector(
@@ -48,7 +48,7 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                       onPressed: () {
                         setState(() {
-                          isLiked = !isLiked; // Toggle like status
+                          isLiked = !isLiked;
                         });
                       },
                     ),
@@ -65,7 +65,7 @@ class _ProductCardState extends State<ProductCard> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: Colors.blue, // Heading color set to blue
+                  color: Colors.blue,
                 ),
               ),
             ),
