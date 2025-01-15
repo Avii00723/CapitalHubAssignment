@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:captialhubassignment/productmodelclass.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,7 +35,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Products'),
+        title: const Text('Products'),
       ),
       body: Column(
         children: [
@@ -46,7 +44,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search...',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -58,30 +56,38 @@ class _ProductListScreenState extends State<ProductListScreen> {
               future: products,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No products available'));
+                  return const Center(child: Text('No products available'));
                 }
 
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 2.0,
-                    mainAxisSpacing: 2.0,
-                    childAspectRatio: 0.8,
-                  ),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return ProductCard(
-                      product: snapshot.data![index],
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetailScreen(product: snapshot.data![index]),
-                          ),
+                // Responsive GridView
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    // Determine the crossAxisCount based on screen width
+                    int crossAxisCount = (constraints.maxWidth ~/ 180).clamp(2, 4);
+
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                        childAspectRatio: 0.7, // Adjusted aspect ratio
+                      ),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return ProductCard(
+                          product: snapshot.data![index],
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailScreen(product: snapshot.data![index]),
+                              ),
+                            );
+                          },
                         );
                       },
                     );
